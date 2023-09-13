@@ -39,12 +39,12 @@ fn execute(_deps: DepsMut, env: Env, info: MessageInfo, msg: ExecuteMsg) -> StdR
             want,
             token_in_denom,
         } => MsgSwapExactAmountOut {
-            sender: info.sender.to_string(),
+            sender: env.contract.address.to_string(),
             routes: vec![SwapAmountOutRoute {
                 pool_id: 86,
                 token_in_denom,
             }],
-            token_in_max_amount: u128::MAX.to_string(),
+            token_in_max_amount: want.amount.to_string(),
             token_out: Some(want.into()),
         }
         .into(),
