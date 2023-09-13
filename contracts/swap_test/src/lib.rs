@@ -14,25 +14,15 @@ fn instantiate(_deps: DepsMut, _env: Env, _info: MessageInfo, _msg: Empty) -> St
 
 #[cw_serde]
 enum ExecuteMsg {
-    Direct {},
+    Direct { token_out_denom: String },
     Reverse { want: Coin, token_in_denom: String },
 }
 
 #[entry_point]
 fn execute(_deps: DepsMut, env: Env, info: MessageInfo, msg: ExecuteMsg) -> StdResult<Response> {
     let swap_msg: CosmosMsg = match msg {
-        ExecuteMsg::Direct {} => {
+        ExecuteMsg::Direct { token_out_denom } => {
             let offer_coin = one_coin(&info).unwrap();
-            let token_out_denom = match offer_coin.denom.as_str() {
-                "factory/osmo1cyyzpxplxdzkeea7kwsydadg87357qnahakaks/fakeusdt" => {
-                    "factory/osmo1cyyzpxplxdzkeea7kwsydadg87357qnahakaks/fakeusdc"
-                }
-                "factory/osmo1cyyzpxplxdzkeea7kwsydadg87357qnahakaks/fakeusdc" => {
-                    "factory/osmo1cyyzpxplxdzkeea7kwsydadg87357qnahakaks/fakeusdt"
-                }
-                _ => panic!("Unsupported coin"),
-            }
-            .to_string();
 
             MsgSwapExactAmountIn {
                 sender: env.contract.address.to_string(),
